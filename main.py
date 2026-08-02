@@ -319,26 +319,26 @@ def main(page: ft.Page):
         dlg_info.open = True
         page.update()
 
-    # --- AUXILIAR PARA EVITAR EL ERROR DE RENDERIZADO EN ANDROID ---
+    # --- AUXILIAR PARA EVITAR ERRORES EN ANDROID ---
     def crear_item_menu(icono, color_icono, texto, accion):
         return ft.Container(
             content=ft.Row([
                 ft.Icon(icono, color=color_icono),
                 ft.Text(texto, size=15, weight="w500", no_wrap=True)
             ], spacing=15),
-            padding=ft.padding.symmetric(vertical=12, horizontal=20),
+            padding=12,  # <--- Padding numérico seguro (sin ft.padding.*)
             border_radius=8,
             on_click=accion,
             ink=True
         )
 
-    # --- MENÚ LATERAL SIN LISTTILES ---
+    # --- MENÚ LATERAL SEGURO ---
     page.drawer = ft.NavigationDrawer(
         controls=[
             ft.Container(height=20),
             ft.Container(
                 content=ft.Text("Elige un Tema", weight="bold", size=18, no_wrap=True),
-                padding=ft.padding.only(left=20, top=10, bottom=10)
+                padding=15  # <--- Padding numérico seguro (sin ft.padding.*)
             ),
             ft.Divider(),
             crear_item_menu("light_mode", "blue", "Tema Claro", lambda e: cambiar_tema("Claro")),
