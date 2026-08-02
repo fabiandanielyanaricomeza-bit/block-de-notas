@@ -14,7 +14,7 @@ def main(page: ft.Page):
     # Estado del tema actual por defecto
     tema_actual = "Oscuro"
 
-    # Diccionario completo de temas con colores personalizados y coordinados
+    # Diccionario completo de temas con colores personalizados
     temas = {
         "Claro": {
             "mode": ft.ThemeMode.LIGHT,
@@ -72,7 +72,6 @@ def main(page: ft.Page):
         }
     }
 
-    # Caché en memoria para optimizar velocidad
     cache_header = []
     cache_rows = []
 
@@ -169,6 +168,7 @@ def main(page: ft.Page):
     # --- BARRAS SUPERIORES (APPBARS) ---
     appbar_inicio = ft.AppBar(
         title=ft.Text("Mis Notas", weight="bold", no_wrap=True),
+        leading=ft.IconButton(icon="menu", on_click=lambda e: abrir_menu_temas()),
         actions=[
             ft.TextButton("Añadir", icon="add", on_click=lambda e: cambiar_vista_edicion()),
             ft.Container(width=10)
@@ -309,48 +309,46 @@ def main(page: ft.Page):
     def cambiar_tema(nombre_tema):
         nonlocal tema_actual
         tema_actual = nombre_tema
-        page.drawer.open = False
+        dlg_menu_temas.open = False
         aplicar_estilo_actual()
         cargar_notas()
 
     def abrir_informacion(e):
-        page.drawer.open = False
+        dlg_menu_temas.open = False
         page.update()
         dlg_info.open = True
         page.update()
 
-    # --- AUXILIAR PARA EVITAR ERRORES EN ANDROID ---
-    def crear_item_menu(icono, color_icono, texto, accion):
-        return ft.Container(
-            content=ft.Row([
-                ft.Icon(icono, color=color_icono),
-                ft.Text(texto, size=15, weight="w500", no_wrap=True)
-            ], spacing=15),
-            padding=12,  # <--- Padding numérico seguro (sin ft.padding.*)
-            border_radius=8,
-            on_click=accion,
-            ink=True
-        )
-
-    # --- MENÚ LATERAL SEGURO ---
-    page.drawer = ft.NavigationDrawer(
-        controls=[
-            ft.Container(height=20),
-            ft.Container(
-                content=ft.Text("Elige un Tema", weight="bold", size=18, no_wrap=True),
-                padding=15  # <--- Padding numérico seguro (sin ft.padding.*)
-            ),
-            ft.Divider(),
-            crear_item_menu("light_mode", "blue", "Tema Claro", lambda e: cambiar_tema("Claro")),
-            crear_item_menu("dark_mode", "grey", "Tema Oscuro Clásico", lambda e: cambiar_tema("Oscuro")),
-            crear_item_menu("local_fire_department", "red", "Rojo Pasión", lambda e: cambiar_tema("Rojo Pasión")),
-            crear_item_menu("eco", "green", "Verde Esmeralda", lambda e: cambiar_tema("Verde Esmeralda")),
-            crear_item_menu("auto_awesome", "purple", "Púrpura Místico", lambda e: cambiar_tema("Púrpura Místico")),
-            crear_item_menu("flash_on", "amber", "Ámbar Neón", lambda e: cambiar_tema("Ámbar Neón")),
-            ft.Divider(),
-            crear_item_menu("info_outline", None, "Información", lambda e: abrir_informacion(e)),
+    # --- MENÚ DE TEMAS (SOLO BOTONES DE TEXTO EN DIÁLOGO SEGURO) ---
+    dlg_menu_temas = ft.AlertDialog(
+        title=ft.Text("Elige un Tema", weight="bold"),
+        content=ft.Column(
+            controls=[
+                ft.TextButton("Tema Claro", icon="light_mode", on_click=lambda e: cambiar_tema("Claro")),
+                ft.TextButton("Tema Oscuro Clásico", icon="dark_mode", on_click=lambda e: cambiar_tema("Oscuro")),
+                ft.TextButton("Rojo Pasión", icon="local_fire_department", on_click=lambda e: cambiar_tema("Rojo Pasión")),
+                ft.TextButton("Verde Esmeralda", icon="eco", on_click=lambda e: cambiar_tema("Verde Esmeralda")),
+                ft.TextButton("Púrpura Místico", icon="auto_awesome", on_click=lambda e: cambiar_tema("Púrpura Místico")),
+                ft.TextButton("Ámbar Neón", icon="flash_on", on_click=lambda e: cambiar_tema("Ámbar Neón")),
+                ft.Divider(),
+                ft.TextButton("Información", icon="info_outline", on_click=lambda e: abrir_informacion(e)),
+            ],
+            tight=True,
+            horizontal_alignment=ft.CrossAxisAlignment.START
+        ),
+        actions=[
+            ft.TextButton("Cerrar", on_click=lambda e: cerrar_menu_temas())
         ]
     )
+    page.overlay.append(dlg_menu_temas)
+
+    def abrir_menu_temas():
+        dlg_menu_temas.open = True
+        page.update()
+
+    def cerrar_menu_temas():
+        dlg_menu_temas.open = False
+        page.update()
 
     # --- CONTENEDORES DE LAS VISTAS ---
     lista_notas_ui = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True, spacing=10)
