@@ -168,10 +168,10 @@ def main(page: ft.Page):
     # --- BARRAS SUPERIORES (APPBARS) ---
     appbar_inicio = ft.AppBar(
         title=ft.Text("Mis Notas", weight="bold", no_wrap=True),
-        leading=ft.IconButton(icon="menu", on_click=lambda e: abrir_menu_temas()),
         actions=[
+            ft.TextButton("Temas", on_click=lambda e: abrir_menu_temas()),
             ft.TextButton("Añadir", icon="add", on_click=lambda e: cambiar_vista_edicion()),
-            ft.Container(width=10)
+            ft.Container(width=5)
         ]
     )
 
@@ -319,7 +319,7 @@ def main(page: ft.Page):
         dlg_info.open = True
         page.update()
 
-    # --- MENÚ DE TEMAS (SOLO BOTONES DE TEXTO EN DIÁLOGO SEGURO) ---
+    # --- MENÚ DE TEMAS (DIÁLOGO CON BOTONES DE TEXTO) ---
     dlg_menu_temas = ft.AlertDialog(
         title=ft.Text("Elige un Tema", weight="bold"),
         content=ft.Column(
@@ -438,3 +438,4 @@ try:
     ft.run(main, view=ft.AppView.WEB_BROWSER)
 except AttributeError:
     ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+    
