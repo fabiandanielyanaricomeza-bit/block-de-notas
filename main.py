@@ -319,22 +319,36 @@ def main(page: ft.Page):
         dlg_info.open = True
         page.update()
 
+    # --- AUXILIAR PARA EVITAR EL ERROR DE RENDERIZADO EN ANDROID ---
+    def crear_item_menu(icono, color_icono, texto, accion):
+        return ft.Container(
+            content=ft.Row([
+                ft.Icon(icono, color=color_icono),
+                ft.Text(texto, size=15, weight="w500", no_wrap=True)
+            ], spacing=15),
+            padding=ft.padding.symmetric(vertical=12, horizontal=20),
+            border_radius=8,
+            on_click=accion,
+            ink=True
+        )
+
+    # --- MENÚ LATERAL SIN LISTTILES ---
     page.drawer = ft.NavigationDrawer(
         controls=[
             ft.Container(height=20),
             ft.Container(
                 content=ft.Text("Elige un Tema", weight="bold", size=18, no_wrap=True),
-                padding=15
+                padding=ft.padding.only(left=20, top=10, bottom=10)
             ),
             ft.Divider(),
-            ft.ListTile(leading=ft.Icon("light_mode", color="blue"), title=ft.Text("Tema Claro", no_wrap=True), on_click=lambda e: cambiar_tema("Claro")),
-            ft.ListTile(leading=ft.Icon("dark_mode", color="grey"), title=ft.Text("Tema Oscuro Clásico", no_wrap=True), on_click=lambda e: cambiar_tema("Oscuro")),
-            ft.ListTile(leading=ft.Icon("local_fire_department", color="red"), title=ft.Text("Rojo Pasión", no_wrap=True), on_click=lambda e: cambiar_tema("Rojo Pasión")),
-            ft.ListTile(leading=ft.Icon("eco", color="green"), title=ft.Text("Verde Esmeralda", no_wrap=True), on_click=lambda e: cambiar_tema("Verde Esmeralda")),
-            ft.ListTile(leading=ft.Icon("auto_awesome", color="purple"), title=ft.Text("Púrpura Místico", no_wrap=True), on_click=lambda e: cambiar_tema("Púrpura Místico")),
-            ft.ListTile(leading=ft.Icon("flash_on", color="amber"), title=ft.Text("Ámbar Neón", no_wrap=True), on_click=lambda e: cambiar_tema("Ámbar Neón")),
+            crear_item_menu("light_mode", "blue", "Tema Claro", lambda e: cambiar_tema("Claro")),
+            crear_item_menu("dark_mode", "grey", "Tema Oscuro Clásico", lambda e: cambiar_tema("Oscuro")),
+            crear_item_menu("local_fire_department", "red", "Rojo Pasión", lambda e: cambiar_tema("Rojo Pasión")),
+            crear_item_menu("eco", "green", "Verde Esmeralda", lambda e: cambiar_tema("Verde Esmeralda")),
+            crear_item_menu("auto_awesome", "purple", "Púrpura Místico", lambda e: cambiar_tema("Púrpura Místico")),
+            crear_item_menu("flash_on", "amber", "Ámbar Neón", lambda e: cambiar_tema("Ámbar Neón")),
             ft.Divider(),
-            ft.ListTile(leading=ft.Icon("info_outline"), title=ft.Text("Información", no_wrap=True), on_click=abrir_informacion),
+            crear_item_menu("info_outline", None, "Información", lambda e: abrir_informacion(e)),
         ]
     )
 
