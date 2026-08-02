@@ -117,7 +117,7 @@ def main(page: ft.Page):
         border=ft.InputBorder.NONE
     )
 
-    # --- FUNCIONES DE NAVEGACIÓN Y ACCIÓN (DEFINIDAS ANTES DE USARSE) ---
+    # --- FUNCIONES DE NAVEGACIÓN Y ACCIÓN ---
     def cambiar_vista_inicio():
         nonlocal nota_en_edicion_index
         nota_en_edicion_index = None
@@ -168,7 +168,7 @@ def main(page: ft.Page):
 
     # --- BARRAS SUPERIORES (APPBARS) ---
     appbar_inicio = ft.AppBar(
-        title=ft.Text("Mis Notas", weight="bold"),
+        title=ft.Text("Mis Notas", weight="bold", no_wrap=True),
         actions=[
             ft.TextButton("Añadir", icon="add", on_click=lambda e: cambiar_vista_edicion()),
             ft.Container(width=10)
@@ -178,7 +178,7 @@ def main(page: ft.Page):
     appbar_edicion = ft.AppBar(
         automatically_imply_leading=False,
         leading=None,
-        title=ft.Text("Gestión de Nota", weight="bold"),
+        title=ft.Text("Gestión de Nota", weight="bold", no_wrap=True),
         actions=[
             ft.TextButton("Guardar", on_click=lambda e: guardar_y_volver()),
             ft.TextButton("X Cancelar", on_click=intentar_cancelar),
@@ -191,14 +191,12 @@ def main(page: ft.Page):
         page.theme_mode = t["mode"]
         page.bgcolor = t["body_bg"]
         
-        # Actualizar AppBar Inicio
         appbar_inicio.bgcolor = t["appbar_bg"]
         appbar_inicio.title.color = t["appbar_fg"]
         for action in appbar_inicio.actions:
             if isinstance(action, ft.TextButton):
                 action.style = ft.ButtonStyle(color=t["appbar_fg"])
 
-        # Actualizar AppBar Edición
         appbar_edicion.bgcolor = t["appbar_bg"]
         appbar_edicion.title.color = t["appbar_fg"]
         for action in appbar_edicion.actions:
@@ -253,8 +251,8 @@ def main(page: ft.Page):
     )
     page.overlay.append(dlg_confirmar_borrar)
 
-    txt_detalle_titulo = ft.Text("", weight="bold", size=20)
-    txt_detalle_fecha = ft.Text("", size=12, color="grey")
+    txt_detalle_titulo = ft.Text("", weight="bold", size=20, no_wrap=True)
+    txt_detalle_fecha = ft.Text("", size=12, color="grey", no_wrap=True)
     txt_detalle_contenido = ft.TextField(
         multiline=True, 
         read_only=True, 
@@ -325,18 +323,18 @@ def main(page: ft.Page):
         controls=[
             ft.Container(height=20),
             ft.Container(
-                content=ft.Text("Elige un Tema", weight="bold", size=18),
+                content=ft.Text("Elige un Tema", weight="bold", size=18, no_wrap=True),
                 padding=15
             ),
             ft.Divider(),
-            ft.ListTile(leading=ft.Icon("light_mode", color="blue"), title=ft.Text("Tema Claro"), on_click=lambda e: cambiar_tema("Claro")),
-            ft.ListTile(leading=ft.Icon("dark_mode", color="grey"), title=ft.Text("Tema Oscuro Clásico"), on_click=lambda e: cambiar_tema("Oscuro")),
-            ft.ListTile(leading=ft.Icon("local_fire_department", color="red"), title=ft.Text("Rojo Pasión"), on_click=lambda e: cambiar_tema("Rojo Pasión")),
-            ft.ListTile(leading=ft.Icon("eco", color="green"), title=ft.Text("Verde Esmeralda"), on_click=lambda e: cambiar_tema("Verde Esmeralda")),
-            ft.ListTile(leading=ft.Icon("auto_awesome", color="purple"), title=ft.Text("Púrpura Místico"), on_click=lambda e: cambiar_tema("Púrpura Místico")),
-            ft.ListTile(leading=ft.Icon("flash_on", color="amber"), title=ft.Text("Ámbar Neón"), on_click=lambda e: cambiar_tema("Ámbar Neón")),
+            ft.ListTile(leading=ft.Icon("light_mode", color="blue"), title=ft.Text("Tema Claro", no_wrap=True), on_click=lambda e: cambiar_tema("Claro")),
+            ft.ListTile(leading=ft.Icon("dark_mode", color="grey"), title=ft.Text("Tema Oscuro Clásico", no_wrap=True), on_click=lambda e: cambiar_tema("Oscuro")),
+            ft.ListTile(leading=ft.Icon("local_fire_department", color="red"), title=ft.Text("Rojo Pasión", no_wrap=True), on_click=lambda e: cambiar_tema("Rojo Pasión")),
+            ft.ListTile(leading=ft.Icon("eco", color="green"), title=ft.Text("Verde Esmeralda", no_wrap=True), on_click=lambda e: cambiar_tema("Verde Esmeralda")),
+            ft.ListTile(leading=ft.Icon("auto_awesome", color="purple"), title=ft.Text("Púrpura Místico", no_wrap=True), on_click=lambda e: cambiar_tema("Púrpura Místico")),
+            ft.ListTile(leading=ft.Icon("flash_on", color="amber"), title=ft.Text("Ámbar Neón", no_wrap=True), on_click=lambda e: cambiar_tema("Ámbar Neón")),
             ft.Divider(),
-            ft.ListTile(leading=ft.Icon("info_outline"), title=ft.Text("Información"), on_click=abrir_informacion),
+            ft.ListTile(leading=ft.Icon("info_outline"), title=ft.Text("Información", no_wrap=True), on_click=abrir_informacion),
         ]
     )
 
@@ -351,7 +349,6 @@ def main(page: ft.Page):
         visible=False
     )
 
-    # --- ACCIONES DE EDICIÓN Y BORRADO ---
     def preparar_editar(idx, titulo, contenido):
         nonlocal nota_en_edicion_index
         nota_en_edicion_index = idx
@@ -377,7 +374,7 @@ def main(page: ft.Page):
             lista_notas_ui.controls.append(
                 ft.Container(
                     content=ft.Row(
-                        [ft.Text("No hay notas. Presiona 'Añadir' para crear una.", color=t["date_color"])],
+                        [ft.Text("No hay notas. Presiona 'Añadir' para crear una.", color=t["date_color"], no_wrap=True)],
                         alignment="center"
                     ),
                     padding=50
@@ -393,8 +390,8 @@ def main(page: ft.Page):
                         content=ft.Row([
                             ft.Container(
                                 content=ft.Row([
-                                    ft.Text(titulo, weight="bold", size=16, expand=True, color=t["card_fg"]),
-                                    ft.Text(fecha, size=12, color=t["date_color"])
+                                    ft.Text(titulo, weight="bold", size=16, expand=True, color=t["card_fg"], no_wrap=True),
+                                    ft.Text(fecha, size=12, color=t["date_color"], no_wrap=True)
                                 ], expand=True),
                                 expand=True,
                                 on_click=lambda e, t_val=titulo, f_val=fecha, c_val=contenido: abrir_detalle(t_val, f_val, c_val)
@@ -425,7 +422,6 @@ def main(page: ft.Page):
     page.add(vista_inicio, vista_edicion)
     cambiar_vista_inicio()
 
-# --- ARRANQUE SEGURO ---
 try:
     ft.run(main, view=ft.AppView.WEB_BROWSER)
 except AttributeError:
